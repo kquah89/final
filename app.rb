@@ -87,7 +87,7 @@ client = Twilio::REST::Client.new(account_sid, auth_token)
 # send the SMS from your trial Twilio number to your verified non-Twilio number
 client.messages.create(
  from: "+12015848310", 
- to: users_table.where(:mobile => params["mobile"]).to_a[0][:mobile],
+ to: "+18728882384",
  body: "Thank you for signing up to MBA reviews! Stay tune for updates to the 2021 MBA rankings by following us on our website!"
 )
     view "create_user"
