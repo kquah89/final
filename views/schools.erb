@@ -2,5 +2,5 @@
 <p> A career in business starts with finding the MBA program that fits your needs. With the U.S. News rankings of the top business schools, narrow your search by location, tuition, school size and test scores.</p>
 
 <% for school in @schools %>
-    <p><a href="/schools/<%= school[:id] %>"><%= school[:title] %></a></p>
+    <p><a href="/schools/<%= school[:id] %>"><%= school[:school] %></a></p>
 <% end %>

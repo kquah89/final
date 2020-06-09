@@ -1,12 +1,15 @@
 <div class="row">
     <div class="col-sm-9">
+        <h1><img src="/<%=@school[:school]%>.jpg" style= "width:360px;height:250px;"</h1>
+        
 
-        <h1><%= @school[:title] %></h1>
+        <h1><%= @school[:school] %></h1>
         <p><%= @school[:description] %></p>
+        <b><p style="color:darkblue;font-size:18px;">Reviews by students</p></b>
         <% for review in @reviews %>
             <% user = @users_table.where(:id => review[:user_id]).to_a[0] %>
             <div class="media">
-                <% if review[:going] %>
+                <% if review[:recommend] %>
                     <i class="fas fa-thumbs-up fa-3x mr-3"></i>
                 <% else %>
                     <i class="fas fa-thumbs-down fa-3x mr-3"></i>
@@ -22,16 +25,16 @@
         </p>
     </div>
     <div class="col-sm-3">
-        <h3>When?</h3>
-        <p><%= @school[:date] %></p>
+        <h3>Rank</h3>
+        <p><%= @school[:rank] %></p>
         <h3>Address</h3>
-        <p><%= @school[:location] %></p>
+        <p><%= @school[:address] %></p>
         <iframe
-  width="600"
-  height="450"
+  width="450"
+  height="300"
   frameborder="0" 
   style="border:0"
-  src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCtovsQvkIUWlNqtYwXY87gEd4ZSmJEhMw&q=<%= @lat_long %>&zoom=6" allowfullscreen>
+  src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCtovsQvkIUWlNqtYwXY87gEd4ZSmJEhMw&q=<%= @lat_long %>&zoom=15" allowfullscreen>
 </iframe>
         <h3>Number of reviews</h3>
         <p><%= @count %></p>

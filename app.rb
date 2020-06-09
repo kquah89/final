@@ -4,7 +4,9 @@ require "sinatra/cookies"                                                       
 require "sinatra/reloader" if development?                                            #
 require "sequel"                                                                      #
 require "logger"                                                                      #
-require "bcrypt"                                                                      #
+require "bcrypt"
+require "geocoder"  
+require "twilio-ruby"                                                                    #
 connection_string = ENV['DATABASE_URL'] || "sqlite://#{Dir.pwd}/development.sqlite3"  #
 DB ||= Sequel.connect(connection_string)                                              #
 DB.loggers << Logger.new($stdout) unless DB.loggers.size > 0                          #
@@ -43,8 +45,8 @@ get "/schools/:id" do
     @count = reviews_table.where(:school_id => params["id"]).count
     #@count = reviews_table.where(:school_id => params["id"], :going => true).count
     # google api
-
-@lat_long = 42,-82
+    results = Geocoder.search(@school[:address])
+    @lat_long = results.first.coordinates.join(",")
     view "school"
 end
 
@@ -57,7 +59,7 @@ end
 # Receiving end of new RSVP form
 post "/schools/:id/reviews/create" do
     reviews_table.insert(:school_id => params["id"],
-                       :going => params["going"],
+                       :recommend => params["recommend"],
                        :user_id => @current_user[:id],
                        :comments => params["comments"])
     @school = schools_table.where(:id => params["id"]).to_a[0]
@@ -72,8 +74,22 @@ end
 # Receiving end of new user form
 post "/users/create" do
     users_table.insert(:name => params["name"],
+                       :mobile => params["mobile"],
                        :email => params["email"],
                        :password => BCrypt::Password.create(params["password"]))
+# read your API credentials from environment variables
+account_sid = ENV["TWILIO_ACCOUNT_SID"]
+auth_token = ENV["TWILIO_AUTH_TOKEN"]
+
+# set up a client to talk to the Twilio REST API
+client = Twilio::REST::Client.new(account_sid, auth_token)
+
+# send the SMS from your trial Twilio number to your verified non-Twilio number
+client.messages.create(
+ from: "+12015848310", 
+ to: users_table.where(:mobile => params["mobile"]).to_a[0][:mobile],
+ body: "Thank you for signing up to MBA reviews! Stay tune for updates to the 2021 MBA rankings by following us on our website!"
+)
     view "create_user"
 end
 

@@ -1,13 +1,13 @@
 <h2>
-    <i class="far fa-calendar-alt"></i>
+    <i class="fas fa-pencil-alt"></i>
     <%= @school[:date] %>
 </h2>
-<h1>Review for <%= @school[:title] %></h1>
+<h1>Review for <%= @school[:school] %></h1>
 
 <form action="/schools/<%= @school[:id] %>/reviews/create" method="POST">
   <div class="form-group">
     <label>Would you recommend the school to others?</label>
-    <select class="form-control" name="going">
+    <select class="form-control" name="recommend">
       <option value="1">Yes</option>
       <option value="0">No</option>
     </select>
